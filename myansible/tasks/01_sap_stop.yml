@@ -15,4 +15,5 @@
         become_user: smjadm
         register: conf_output
       - debug: msg="Servers configuration details {{conf_output.stdout}}"
+#
 #  ps -ef | grep adm | awk '{print $1}' | grep adm | sort -u
