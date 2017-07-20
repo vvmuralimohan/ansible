@@ -1,0 +1,26 @@
+---
+  - hosts: all
+# This file is used to verify processes for SIDs
+    tasks:
+      - name: Verify SMJADM processes
+        shell: ps -ef | grep ^smjadm | grep -v bash
+        register: smjadm_ps
+        ignore_errors: True
+      - debug: msg="SMJADM Process details {{smjadm_ps.stdout}}"
+
+      - name: SMJADM fail the play if the previous command did not succeed
+        fail: msg="No processes for SMJADM the command failed"
+        when: "'FAILED' in smjadm_ps.stderr"
+
+      - name: Verify SMAADM processes
+        shell: ps -ef | grep ^smaadm | grep -v bash
+        register: smaadm_ps
+        ignore_errors: True
+        failed_when: "'FAILED' in smaadm_ps.stderr"
+      - debug: msg="SMAADM Process details {{smaadm_ps.stdout}}"
+
+      - name: SMAADM fail the play if the previous command did not succeed
+        fail: msg="No processes for SMAADM the command failed"
+        when: "'FAILED' in smaadm_ps.stderr"
+
+#  ps -ef | grep adm | awk '{print $1}' | grep adm | sort -u

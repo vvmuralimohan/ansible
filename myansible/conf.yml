@@ -1,0 +1,71 @@
+---
+ - hosts: all
+   gather_facts: false
+   become: true
+
+   tasks:
+   - name: Getting Hostname
+     shell: hostname
+     register: hostname_output
+
+   - name: print to stdout
+     action: command echo "HELLO" {{hostname_output}}
+
+   - name: Getting uname -a configuration
+     shell: uname -a
+     register: uname_output
+
+   - name: Getting dmidecode configuration
+     shell: dmidecode -t1
+     register: dmi_output
+
+   - name: Getting fstab configuration
+     shell: cat /etc/fstab
+     register: fstab_output
+
+   - name: Getting uptime configuration
+     shell: uptime
+     register: uptime_output
+#     run_once: true
+
+   - name: Getting df configuration
+     shell: df -TPh
+     register: df_output
+#     run_once: true
+
+   - name: Getting pvs configuration
+     shell: pvs
+     register: pvs_output
+
+   - name: Getting vgs configuration
+     shell: vgs
+     register: vgs_output
+
+   - name: Getting lvs configuration
+     shell: lvs
+     register: lvs_output
+
+#   - name: Log data to file
+#     lineinfile:
+#      line: "{{hostname_output.stdout}}"
+#      line: "{{uname_output.stdout}}"
+#      insertafter: EOF
+#      dest: /home/murali/myansible/conf/uptime.txt
+#      deligate_to: 127.0.0.1
+
+
+#   - local_action: lineinfile line="{{ansible_host}} {{hostname_output.stdout}}" insertafter=EOF dest="/home/murali/myansible/conf/uptime.txt"
+#   - local_action: lineinfile line="{{ansible_host}} {{uname_output.stdout}}" insertafter=EOF dest="/home/murali/myansible/conf/uptime.txt"
+#   - local_action: lineinfile line={{ansible_host}} line={{uptime_output.stdout}} insertafter=EOF dest="/home/murali/myansible/conf/uptime.txt"
+#   - local_action: lineinfile line="{{uptime_output.stdout }}" dest="/home/murali/myansible/conf/uptime.txt"
+#    - debug: msg="Hostname {{ansible_host}} {{hostname_output.stdout}}"
+#   - debug: msg="Running Kernel on  {{ansible_host}} {{uname_output.stdout}}"
+#   - debug: msg="Physical/Virtual details on  {{ansible_host}} {{dmi_output.stdout}}"
+#   - debug: msg="/etc/fstab entries on  {{ansible_host}} {{fstab_output.stdout}}"
+#   - debug: msg="Uptime on {{ansible_host}} {{uptime_output.stdout}}"
+#   - debug: msg="Mounted file systems on {{ansible_host}} {{df_output.stdout}}"
+#   - debug: msg="LV Configuration on {{ansible_host}} {{pvs_output.stdout}}"
+#   - debug: msg="LV Configuration on {{ansible_host}} {{vgs_output.stdout}}"
+#   - debug: msg="LV Configuration on {{ansible_host}} {{lvs_output.stdout}}"
+#   - local_action: copy content="{{df_output.stdout }}" dest="/home/murali/myansible/conf/df.txt"
+#   - debug: msg="Hostname IS {{ansible_host}} {{hostname_output1.stdout}}"

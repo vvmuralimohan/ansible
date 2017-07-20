@@ -1,0 +1,4 @@
+Filesystem                   Type   Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup-lv_root ext4   6.7G  1.9G  4.5G  30% /
+tmpfs                        tmpfs  499M     0  499M   0% /dev/shm
+/dev/sda1                    ext4   485M   39M  421M   9% /boot

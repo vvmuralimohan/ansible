@@ -1,0 +1,9 @@
+---
+- name: Confirm that the host is up and reachable following reboot
+  local_action: wait_for host={{ ansible_host | default(inventory_hostname) }} port=22 delay=10 state=started 
+  become: false
+  register: host_is_up
+  changed_when: true
+
+- include: tasks/post_reboot_checks.yaml
+  when: host_is_up.changed

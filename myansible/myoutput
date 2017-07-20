@@ -1,0 +1,38 @@
+
+PLAY [all] *********************************************************************
+
+TASK [setup] *******************************************************************
+fatal: [192.168.56.102]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.102 port 22: No route to host\r\n", "unreachable": true}
+ok: [192.168.56.101]
+ok: [node1]
+
+TASK [Checking nework connectivity] ********************************************
+ok: [node1]
+ok: [192.168.56.101]
+
+TASK [Checking uptime] *********************************************************
+changed: [192.168.56.101]
+changed: [node1]
+
+TASK [debug] *******************************************************************
+ok: [192.168.56.101] => {
+    "msg": "Uptime on 192.168.56.101  17:46:51 up 16:52,  3 users,  load average: 0.00, 0.00, 0.00"
+}
+ok: [node1] => {
+    "msg": "Uptime on node1  17:46:51 up 16:52,  3 users,  load average: 0.00, 0.00, 0.00"
+}
+
+TASK [debug] *******************************************************************
+ok: [192.168.56.101] => {
+    "msg": "PING on 192.168.56.101 {u'changed': False, u'ping': u'pong'}"
+}
+ok: [node1] => {
+    "msg": "PING on node1 {u'changed': False, u'ping': u'pong'}"
+}
+	to retry, use: --limit @/home/murali/myansible/wip.retry
+
+PLAY RECAP *********************************************************************
+192.168.56.101             : ok=5    changed=1    unreachable=0    failed=0   
+192.168.56.102             : ok=0    changed=0    unreachable=1    failed=0   
+node1                      : ok=5    changed=1    unreachable=0    failed=0   
+

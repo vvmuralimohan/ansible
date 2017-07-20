@@ -1,0 +1,10 @@
+---
+ - hosts: all
+   become: true
+
+   tasks:
+   - name: Find and Replace text in /etc/hosts
+     lineinfile:
+       regexp: '^192\.168\.56\.102'
+       line: '192.168.56.103 node3 node3.localdomain'
+       dest: /etc/hosts

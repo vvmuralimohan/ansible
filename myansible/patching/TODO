@@ -1,0 +1,9 @@
+add logic for dbora to start stop db's when the script is installed
+and debug msg
+
+add check to look for any app running, such as java, and prompt individual advising the app is still running
+
+Add check for hugepages for hosts that should have it disabled
+prompt user to input if hugepages applies. If so, do a check.
+
+Add in check for ksplice. If installed, execute as a ksplice patch and avoid a reboot. prompt user and advise the host has ksplice and if they would like to use it

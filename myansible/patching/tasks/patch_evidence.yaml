@@ -1,0 +1,11 @@
+---
+- name: Compiling patch evidence
+  shell: grep "`date '+%b %d'`" /var/log/yum.log >> ~/updated_packages.txt
+
+- name: Gather patch evidence
+  fetch: src=~/updated_packages.txt dest=logs/
+
+
+#capture patch evidence
+###copy yum log
+##do uptime; date; show running kernel version, output to log file

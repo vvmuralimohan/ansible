@@ -1,0 +1,62 @@
+[root@msp-jmppl99 main_patching]# cat main.yaml
+---
+- name: Check OS and Version
+  become: true
+  hosts: all
+#  serial: 1 #define how many hosts Ansible should manage at a single time. Defining this setting determines a finite amount from the inventory that must complete the play before moving on to the next. This is useful for load-balanced servers, where one should complete fully, before the 'sister' host should be executed.
+  tasks:
+   - include: tasks/yum_update.yaml
+     when: (ansible_os_family == "RedHat" and ansible_distribution_major_version >= "5") or (ansible_os_family == "OracleLinux" and ansible_distribution_major_version >= "5")
+   - include: tasks/zypper_update.yaml
+     when: (ansible_os_family == "Suse")
+[root@msp-jmppl99 main_patching]# cat tasks/yum_update.yaml
+---
+- name: Run yum update
+  yum: name=* state=latest exclude=nagios*
+  register: patches_applied
+
+- name: Check for reboot hint
+  shell: if [ "`rpm -q kernel --queryformat '%{installtime} %{version}-%{release}.%{arch}\n' | sort -n -k1 | tail -1 | cut -d ' ' -f 2`" = "`uname -r`" ]; then echo "latest kernel already applied"; else echo "reboot required, the kernel was updated"; fi
+  register: reboot_hint
+  ignore_errors: true
+  when: patches_applied.changed
+
+- name: Checking if host is an Oracle Virtual Machine,  part of Oracle Enterprise manager/Private cloud appliance
+  debug: msg="This System clasifies as vendor type Xen, please reboot manually through Oracle Enterprise Manager for Oracle Virtual Machine."
+  when: "'{{ ansible_system_vendor }}' == 'Xen'"
+
+- include: tasks/reboot_prep.yaml
+  when:
+   - patches_applied.changed
+   - reboot_hint.stdout.find('reboot required, the kernel was updated') != -1
+   - "'{{ ansible_system_vendor }}' != 'Xen'"
+
+- include: tasks/patch_evidence.yaml
+  when: patches_applied.changed
+[root@msp-jmppl99 main_patching]#
+[root@msp-jmppl99 main_patching]# cat tasks/zypper_update.yaml
+---
+- name: Run Zypper Update
+  zypper: name=* state=latest
+  register: patches_applied
+
+- name: Check for reboot hint
+  shell: if [ "`rpm -q kernel --queryformat '%{installtime} %{version}-%{release}.%{arch}\n' | sort -n -k1 | tail -1 | cut -d ' ' -f 2`" = "`uname -r`" ]; then echo "latest kernel already applied"; else echo "reboot required, the kernel was updated"; fi
+  register: reboot_hint
+  ignore_errors: true
+  when: patches_applied.changed
+
+- name: Checking if host is an Oracle Virtual Machine,  part of Oracle Enterprise manager/Private cloud appliance
+  debug: msg="This System clasifies as vendor type Xen, please reboot manually through Oracle Enterprise Manager for Oracle Virtual Machine."
+  when: "'{{ ansible_system_vendor }}' == 'Xen'"
+
+- include: tasks/reboot_prep.yaml
+  when:
+   - patches_applied.changed
+   - reboot_hint.stdout.find('reboot required, the kernel was updated') != -1
+   - "'{{ ansible_system_vendor }}' != 'Xen'"
+
+- include: tasks/patch_evidence.yaml
+  when: patches_applied.changed
+[root@msp-jmppl99 main_patching]#
+

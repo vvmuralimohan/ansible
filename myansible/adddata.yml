@@ -1,0 +1,36 @@
+---
+ - hosts: all
+   gather_facts: false
+   become: true
+
+   tasks:
+   - name: Append data to installlog
+     lineinfile:
+      line: "\n[Mediator 1]\nClientAddress=0\nHost=10.113.137.56\nServerPort=443\nClientPort=14296\n\n[Mediator 2]\nClientAddress=0\nHost=10.113.137.57\nServerPort=443\nClientPort=14296\n\n[Mediator 3]\nClientAddress=0\nHost=10.113.137.12\nServerPort=443\nClientPort=14296\nSecondaryServerIP=10.253.238.109\nSecondaryServerSSLPort=443\n\n"
+      insertafter: EOF 
+      dest: /root/install.log
+
+#   - name: Log data to file
+#     lineinfile:
+#      line: "{{hostname_output.stdout}}"
+#      line: "{{uname_output.stdout}}"
+#      insertafter: EOF
+#      dest: /home/murali/myansible/conf/uptime.txt
+#      deligate_to: 127.0.0.1
+
+
+#   - local_action: lineinfile line="{{ansible_host}} {{hostname_output.stdout}}" insertafter=EOF dest="/home/murali/myansible/conf/uptime.txt"
+#   - local_action: lineinfile line="{{ansible_host}} {{uname_output.stdout}}" insertafter=EOF dest="/home/murali/myansible/conf/uptime.txt"
+#   - local_action: lineinfile line={{ansible_host}} line={{uptime_output.stdout}} insertafter=EOF dest="/home/murali/myansible/conf/uptime.txt"
+#   - local_action: lineinfile line="{{uptime_output.stdout }}" dest="/home/murali/myansible/conf/uptime.txt"
+#    - debug: msg="Hostname {{ansible_host}} {{hostname_output.stdout}}"
+#   - debug: msg="Running Kernel on  {{ansible_host}} {{uname_output.stdout}}"
+#   - debug: msg="Physical/Virtual details on  {{ansible_host}} {{dmi_output.stdout}}"
+#   - debug: msg="/etc/fstab entries on  {{ansible_host}} {{fstab_output.stdout}}"
+#   - debug: msg="Uptime on {{ansible_host}} {{uptime_output.stdout}}"
+#   - debug: msg="Mounted file systems on {{ansible_host}} {{df_output.stdout}}"
+#   - debug: msg="LV Configuration on {{ansible_host}} {{pvs_output.stdout}}"
+#   - debug: msg="LV Configuration on {{ansible_host}} {{vgs_output.stdout}}"
+#   - debug: msg="LV Configuration on {{ansible_host}} {{lvs_output.stdout}}"
+#   - local_action: copy content="{{df_output.stdout }}" dest="/home/murali/myansible/conf/df.txt"
+#   - debug: msg="Hostname IS {{ansible_host}} {{hostname_output1.stdout}}"

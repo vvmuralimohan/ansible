@@ -1,0 +1,9 @@
+--- # Disable auto update for Ubuntu
+- hosts: all
+  become: yes
+  tasks:
+    - name: disable auto updates
+      replace:
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+        regexp: '(?:[ \t]*\"\${distro_id}:\${distro_codename}-security\";)'
+        replace: '//  "\${distro_id}:\${distro_codename}-security\";'

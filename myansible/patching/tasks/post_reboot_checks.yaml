@@ -1,0 +1,13 @@
+---
+- name: Capture state of mounts following reboot
+  shell: df -h >> ~/mounts_after.txt; mount >> ~/mount_details_after.txt
+
+- name: Fetch mount state and details and perform pre/post compare
+  fetch: src=~/{{ item }} dest=logs/
+  with_items:
+     - mounts_after.txt
+     - mount_details_after.txt
+
+- name: Ensure all pre-existing mounts are mounted
+  shell: mount -a
+#add in logic to compare prior mount state with present and mount missing

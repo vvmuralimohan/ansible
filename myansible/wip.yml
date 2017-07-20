@@ -1,0 +1,27 @@
+---
+ - hosts: all
+   become: true
+#   vars_prompt:
+#      - name: user_id
+#        prompt: "Please enter the user Name to change password :"
+#      - name: user_passwd
+#        prompt: "Password: "
+#       encrypt: "sha512_crypt"
+   tasks:
+   - name: Checking nework connectivity
+     ping:
+     register: ping_output
+
+   - name: Checking uptime
+     shell: uptime
+     register: uptime_output
+
+#   - name: Mounting all file systems in /etc/fstab file
+#     shell: mount -a
+#     register: mount_output
+#     failed_when: "'FAILED' Not able mount all mount points in mount_output.stderr"
+#   - name: Checking Read Only mounts on the system
+#     shell: 
+
+   - debug: msg="Uptime on {{ansible_host}} {{uptime_output.stdout}}"
+   - debug: msg="PING on {{ansible_host}} {{ping_output}}"

@@ -1,0 +1,19 @@
+---
+  - hosts: all
+# This file is used to swith user to other user and run task as that user
+    tasks:
+      - name: Become smaadm user
+        shell: /home/smaadm/start.sh
+        become: yes
+        become_user: smaadm
+        register: conf_output
+      - debug: msg="Servers configuration details {{conf_output.stdout}}"
+
+      - name: Become smjadm user
+        shell: /home/smjadm/start.sh
+        become: yes
+        become_user: smjadm
+        register: conf_output
+      - debug: msg="Servers configuration details {{conf_output.stdout}}"
+#  ps -ef | grep adm | awk '{print $1}' | grep adm | sort -u
+#

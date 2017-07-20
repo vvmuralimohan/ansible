@@ -1,0 +1,28 @@
+---
+- name: Capture mount information
+  shell: df -h >> ~/mounts.txt; mount >> ~/mount_details.txt
+
+- name: Fetch mount details prior to reboot
+  fetch: src=~/{{ item }} dest=logs/
+  with_items:
+     - mounts.txt
+     - mount_details.txt
+
+- name: Attempting a puppet agent run, if available on the host...
+  command: /opt/puppet/bin puppet agent --test --no-noop creates=/var/lib/puppet/state/agent_catalog_run.lock
+  register: puppet_result
+  changed_when: puppet_result.rc == 2
+  failed_when: puppet_result.rc == 1
+  ignore_errors: true
+    
+
+- name: Rebooting...
+  shell: sleep 2 && shutdown -r now "kernel update applied"
+  register: kernel_updated
+  changed_when: true
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- include: tasks/verify_host_is_up.yaml
+  when: kernel_updated.changed

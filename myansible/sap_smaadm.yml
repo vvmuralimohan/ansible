@@ -1,0 +1,11 @@
+---
+  - hosts: all
+    gather_facts: true
+# This file is used to swith user to other user and run task as that user
+    tasks:
+      - name: Become smaadm user
+      - script: /home/smaadm/start.sh
+      - command: uptime
+        become: yes
+        become_user: smaadm
+        register: myopt

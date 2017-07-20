@@ -1,0 +1,10 @@
+---
+- name: Check OS and Version
+  become: true
+  hosts: all
+#  serial: 1 #define how many hosts Ansible should manage at a single time. Defining this setting determines a finite amount from the inventory that must complete the play before moving on to the next. This is useful for load-balanced servers, where one should complete fully, before the 'sister' host should be executed.
+  tasks:
+   - include: tasks/yum_update.yaml
+     when: (ansible_os_family == "RedHat" and ansible_distribution_major_version >= "5") or (ansible_os_family == "OracleLinux" and ansible_distribution_major_version >= "5")
+   - include: tasks/zypper_update.yaml
+     when: (ansible_os_family == "Suse")

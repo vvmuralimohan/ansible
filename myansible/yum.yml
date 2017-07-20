@@ -1,0 +1,10 @@
+---
+ - hosts: all
+   gather_facts: false
+   become: true
+
+   tasks:
+   - name: Updating all packages using YUM
+     yum:
+       name: '*'
+       state: latest

@@ -1,0 +1,15 @@
+---
+  - hosts: localvms
+    gather_facts: false
+    become: true
+
+# This file is used to collect server configuration
+   tasks:
+   - name: Getting configuration details if Redhat and major <= 6
+     shell: "echo;echo Host Name;echo =========;hostname -f;echo;echo Disk Information:;echo ==================;df -TPh;echo;echo UPTIME;echo ======; uptime;echo;echo Physical or Virtual;echo ===========================;dmidecode -t1;echo;echo /etc/fstab;echo ==============;cat /etc/fstab;echo;echo Current Kernel;echo ================;uname -a;echo;echo PV;echo ==;pvs -o+pv_used;echo;echo VG;echo ==;vgs;echo;echo LV;echo ==;lvs;echo;echo Memory;echo =========;free -mt;echo;echo Network Information;echo ===============;ifconfig -a;echo Routing;echo ==========;route -n;echo;echo GRUB;echo ====;cat /etc/grub.conf;echo;echo Multipath;echo ============;multipath -ll;echo"
+     when: (ansible_os_family == "RedHat" and ansible_distribution_major_version <= "6" ) or 
+           (ansible_distribution == "OracleLinux" and ansible_distribution_major_version <= "6")
+
+   - name: Getting configuration details if Redhat and major > 6
+     shell: "echo;echo Host Name;echo =========;hostname -f;echo;echo Disk Information:;echo ==================;df -TPh;echo;echo UPTIME;echo ======; uptime;echo;echo Physical or Virtual;echo ===========================;dmidecode -t1;echo;echo /etc/fstab;echo ==============;cat /etc/fstab;echo;echo Current Kernel;echo ================;uname -a;echo;echo PV;echo ==;pvs -o+pv_used;echo;echo VG;echo ==;vgs;echo;echo LV;echo ==;lvs;echo;echo Memory;echo =========;free -mt;echo;echo Network Information;echo ===============;ifconfig -a;echo Routing;echo ==========;route -n;echo;echo GRUB;echo ====;cat /etc/default/grub;echo;echo Multipath;echo ============;multipath -ll;echo"
+     when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'

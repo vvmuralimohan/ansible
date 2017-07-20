@@ -1,0 +1,11 @@
+---
+ - hosts: all
+   gather_facts: false
+   become: true
+
+   tasks:
+   - name: Getting configuration details
+#    - script: /home/murali/myansible/confscript.sh
+     shell: "echo;echo Host Name;echo =========;hostname -f;echo;echo Disk Information:;echo ==================;df -TPh;echo;echo UPTIME;echo ======; uptime;echo;echo Physical or Virtual;echo ===========================;dmidecode -t1;echo;echo /etc/fstab;echo ==============;cat /etc/fstab;echo;echo Current Kernel;echo ================;uname -a;echo;echo PV;echo ==;pvs -o+pv_used;echo;echo VG;echo ==;vgs;echo;echo LV;echo ==;lvs;echo;echo Memory;echo =========;free -mt;echo;echo Network Information;echo ===============;ifconfig -a;echo Routing;echo ==========;route -n;echo;echo GRUB;echo ====;cat /etc/grub.conf;echo;echo Multipath;echo ============;multipath -ll;echo"
+     register: conf_output
+   - debug: msg="Servers configuration details {{conf_output.stdout}}"

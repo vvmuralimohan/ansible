@@ -1,0 +1,30 @@
+---
+  - hosts: all
+    become: true
+    gather_facts: true
+    vars_prompt:
+       - name: your_user_name
+         prompt: "Please enter the Username whose password you want to change?"
+         private: no
+    tasks:
+    - name: Checking if {{your_user_name}} exists
+      getent:
+        database=passwd
+        key={{your_user_name}}
+        fail_key=false
+      register: user_present
+    - debug: msg="User "{{your_user_name}}" exist"
+      when: user_present|succeeded
+
+    - name: Checking if account is locked by pam_tally
+      shell: /sbin/pam_tally2 -u {{your_user_name}} | grep -vi login | awk '{print $2}'
+      register: user_locked
+
+    - debug: msg="User {{your_user_name}} is locked by pam_tally"
+      when: user_locked.stdout >= "3"
+
+    - debug: msg="User {{your_user_name}} is not locked by pam_tally"
+      when: user_locked.stdout <= "3"
+
+    - name: Unlocking {{your_user_name}} via pam_tally2
+      command: /sbin/pam_tally2 -u {{your_user_name}} -r

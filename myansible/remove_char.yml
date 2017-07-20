@@ -1,0 +1,10 @@
+---
+ - hosts: all
+   become: true
+
+   tasks:
+#   - name: getting file system info
+   - debug: msg="{{ item.mount }}"
+#   - debug: var=item.mount
+     with_items:
+       - "{{ ansible_mounts }}"

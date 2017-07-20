@@ -1,0 +1,1 @@
+The group_vars directory contains a series of credential files, which link to variables in host inventory (main_patching/hosts). Each file represents a group's credentials. Groups are logically separated by credential/authentication type.

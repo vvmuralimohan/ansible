@@ -1,0 +1,9 @@
+---
+ - hosts: all
+   become: true
+   tasks:
+   - name: Checking nework connectivity
+     ping:
+     register: ping_output
+
+   - debug: msg="PING on {{ansible_host}} {{ping_output}}"
